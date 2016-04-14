@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 
 import acm.graphics.*;
@@ -11,7 +10,8 @@ public class BreakoutGame extends GraphicsProgram {
 
 	private static final int NUMBER_OF_BLOCKS = 10;
 	private static final int BLOCK_WIDTH = (WINDOW_WIDTH - (NUMBER_OF_BLOCKS - 1)
-			* SPACE_BETWEEN_BLOCKS)/ NUMBER_OF_BLOCKS;
+			* SPACE_BETWEEN_BLOCKS)
+			/ NUMBER_OF_BLOCKS;
 	private static final int BLOCK_HIGHT = 8;
 	private static final int NUMBER_OF_LINES = 10;
 	private static final int BLOCKS_TOP_OFFSET = 70;
@@ -27,15 +27,15 @@ public class BreakoutGame extends GraphicsProgram {
 
 	public void run() {
 		this.setSize(WINDOW_WIDTH, WINDOW_HIGHT);
-		 setBlocks();
-		// createPaddle();
+		setBlocks();
+		createPaddle();
 		// createCollider();
 		// Game();
 	}
 
 	private void setBlocks() {
 		for (int i = 0; i < NUMBER_OF_BLOCKS; i++) {
-			for(int f=0;f<NUMBER_OF_LINES/5;f++){
+			for (int f = 0; f < NUMBER_OF_LINES / 5; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.RED);
 				block.setFilled(true);
@@ -43,7 +43,7 @@ public class BreakoutGame extends GraphicsProgram {
 				add(block, blockX, blockY);
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for(int f=0;f<NUMBER_OF_LINES/5;f++){
+			for (int f = 0; f < NUMBER_OF_LINES / 5; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.ORANGE);
 				block.setFilled(true);
@@ -51,7 +51,7 @@ public class BreakoutGame extends GraphicsProgram {
 				add(block, blockX, blockY);
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for(int f=0;f<NUMBER_OF_LINES/5;f++){
+			for (int f = 0; f < NUMBER_OF_LINES / 5; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.YELLOW);
 				block.setFilled(true);
@@ -59,7 +59,7 @@ public class BreakoutGame extends GraphicsProgram {
 				add(block, blockX, blockY);
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for(int f=0;f<NUMBER_OF_LINES/5;f++){
+			for (int f = 0; f < NUMBER_OF_LINES / 5; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.GREEN);
 				block.setFilled(true);
@@ -67,7 +67,7 @@ public class BreakoutGame extends GraphicsProgram {
 				add(block, blockX, blockY);
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for(int f=0;f<NUMBER_OF_LINES/5;f++){
+			for (int f = 0; f < NUMBER_OF_LINES / 5; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.CYAN);
 				block.setFilled(true);
@@ -75,18 +75,21 @@ public class BreakoutGame extends GraphicsProgram {
 				add(block, blockX, blockY);
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			blockY= BLOCKS_TOP_OFFSET;
-			blockX+=BLOCK_WIDTH+SPACE_BETWEEN_BLOCKS;
+			blockY = BLOCKS_TOP_OFFSET;
+			blockX += BLOCK_WIDTH + SPACE_BETWEEN_BLOCKS;
 		}
 	}
 
 	private void createPaddle() {
-		// TODO Auto-generated method stub
-
+		int paddleX = (WINDOW_WIDTH-PADDLE_WIDTH)/2;
+		int paddleY = WINDOW_HIGHT-PADDLE_BOTTOM_OFFSET;
+		GRect paddle = new GRect(paddleX, paddleY, PADDLE_WIDTH, PADDLE_HIGHT);
+		paddle.setFilled(true);
+		paddle.setFillColor(Color.BLACK);
+		add(paddle);
 	}
 
 	private void createCollider() {
-		// TODO Auto-generated method stub
 
 	}
 
