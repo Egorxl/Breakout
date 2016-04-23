@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.datatransfer.SystemFlavorMap;
 import java.awt.event.*;
 import acm.graphics.*;
 import acm.program.*;
@@ -25,7 +26,7 @@ public class BreakoutGame extends GraphicsProgram {
 
 	private static final int COLLIDER_RADIUS = 10;
 
-	private static final int SPEED = 5;
+	private static final int SPEED = 4;
 
 	private int blockX = 0;
 	private int blockY = BLOCKS_TOP_OFFSET;
@@ -33,17 +34,17 @@ public class BreakoutGame extends GraphicsProgram {
 	int numberOfBlocks = 0;
 
 	GLabel info = new GLabel("чтобы начать игру, нажмите пробел");
-	GLabel info2 = new GLabel("чтобы отправить Шар нажмите левый шифт");
+	GLabel info2 = new GLabel("чтобы запустить Шар нажмите пробел");
 
 	int colliderX = (WINDOW_WIDTH - PADDLE_WIDTH) / 2 + PADDLE_WIDTH / 2
 			- COLLIDER_RADIUS;
 	int colliderY = WINDOW_HIGHT - PADDLE_BOTTOM_OFFSET - COLLIDER_RADIUS * 2;
 	GOval collider = new GOval(COLLIDER_RADIUS * 2, COLLIDER_RADIUS * 2);
 
-	private RandomGenerator rgen = RandomGenerator.getInstance();
-	int randomNumberForCollderDirection = rgen.nextInt(25, 155);
-	int colliderDirectionY = (randomNumberForCollderDirection);
-	int colliderDirectionX = (180 - randomNumberForCollderDirection);
+	RandomGenerator rgen = RandomGenerator.getInstance();
+	int randomNumberForCollderDirection = rgen.nextInt(25, 70);
+	int colliderDirectionY = (45);
+	int colliderDirectionX = (45);
 
 	int paddleX = (WINDOW_WIDTH - PADDLE_WIDTH) / 2;
 	int paddleY = WINDOW_HIGHT - PADDLE_BOTTOM_OFFSET;
@@ -62,6 +63,8 @@ public class BreakoutGame extends GraphicsProgram {
 
 	private void createField() {
 		remove(info);
+		add(info2, (WINDOW_WIDTH - info.getDescent()) / 4,
+				(WINDOW_HIGHT - info.getAscent()) / 2 + info.getAscent());
 		setBlocks();
 		createCollider();
 		createPaddle();
@@ -72,8 +75,6 @@ public class BreakoutGame extends GraphicsProgram {
 	private void addInstruction() {
 		add(info, (WINDOW_WIDTH - info.getDescent()) / 4,
 				(WINDOW_HIGHT - info.getAscent()) / 2);
-		add(info2, (WINDOW_WIDTH - info2.getDescent()) / 4,
-				(WINDOW_HIGHT - info2.getAscent()) / 2 + info.getAscent());
 	}
 
 	private void setBlocks() {
@@ -152,6 +153,8 @@ public class BreakoutGame extends GraphicsProgram {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		
+		
 		System.out.println("нажата клавиша номер " + e.getKeyCode());// проверяет,
 																		// какая
 																		// клавиша
@@ -160,11 +163,12 @@ public class BreakoutGame extends GraphicsProgram {
 																		// работы
 																		// с
 																		// кодом)
-		if (e.getKeyCode() == 32 && !field) {// проверяет нажатие пробела
+		if (e.getKeyCode() == 32 && !field) {// проверяет нажатие пробела и
+												// выставляет поле
 			createField();// создает поле
 			field = true;
-		}
-		if (e.getKeyCode() == 16 && field) {// проверяет нажатие пробела
+		} else if (e.getKeyCode() == 32 && field && !game) {// проверяет нажатие пробела
+													// и начинает гру
 			game = true;
 			colliderIsOnPaddle = false;
 			remove(info2);
@@ -192,10 +196,18 @@ public class BreakoutGame extends GraphicsProgram {
 	}
 
 	private void startGame() {// начинает игру
+		int i = 0;
+		
 		while (game) {
-			moveCollider();// запускает Шар
-			checkForCollision();// проверяет удар
-			checkForBlocksLeft();// проверяет, очтались ли блоки
+			collider.move(-10, -20);
+			pause(400);
+			i++;
+			System.out.println(i);
+			if (i > 0)
+				game = false;
+			// запускает Шар
+			 checkForCollision();// проверяет удар
+			 checkForBlocksLeft();// проверяет, остались ли блоки
 		}
 	}
 
@@ -210,6 +222,12 @@ public class BreakoutGame extends GraphicsProgram {
 		checkForBlockCollision();
 		// TODO checkForGameEnd();//проверить столкновение с нижней
 		// стенкой(смерть)
+
+	}
+
+	private void checkForGameEnd() {
+		if (collider.getY() == WINDOW_HIGHT)
+			game = false;
 
 	}
 
@@ -228,9 +246,8 @@ public class BreakoutGame extends GraphicsProgram {
 					}
 				}
 			}
-		}
-
-		if (getElementAt(collider.getX(), collider.getY() + COLLIDER_RADIUS) != null
+		} else if (getElementAt(collider.getX(), collider.getY()
+				+ COLLIDER_RADIUS) != null
 				|| getElementAt(collider.getX() + COLLIDER_RADIUS * 2,
 						collider.getY() + COLLIDER_RADIUS) != null) {
 			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
@@ -259,8 +276,7 @@ public class BreakoutGame extends GraphicsProgram {
 	}
 
 	private void moveCollider() {// сила, движущая Шар
-		collider.move(-colliderDirectionX, -colliderDirectionY);
-		pause(SPEED);
+		
 
 	}
 
