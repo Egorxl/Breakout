@@ -208,37 +208,47 @@ public class BreakoutGame extends GraphicsProgram {
 	private void checkForCollision() {
 		checkForWallCollision();// проверяет столкновение со стенкой по
 		checkForBlockCollision();
-		//TODO checkForGameEnd();//проверить столкновение с нижней стенкой(смерть)
+		// TODO checkForGameEnd();//проверить столкновение с нижней
+		// стенкой(смерть)
 
 	}
 
-	/*TODO*/private void checkForBlockCollision() {
-//		if(collider.getX());
-//			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
-//				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
-//					if (collider.equals(blocks[i][f])) {
-//						remove(blocks[i][f]);//EXTERMINATE!!
-//						numberOfBlocks--;
-//						colliderDirectionX *= -1;
-//						break;
-//					}
-//				}
-//			}
-		
+	private void checkForBlockCollision() {
+		if (getElementAt(collider.getX() + COLLIDER_RADIUS, collider.getY()) != null
+				|| getElementAt(collider.getX() + COLLIDER_RADIUS,
+						collider.getY() + COLLIDER_RADIUS * 2) != null) {
+
+			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
+				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
+					if (collider.equals(blocks[i][f])) {
+						remove(blocks[i][f]);// EXTERMINATE!!
+						numberOfBlocks--;
+						colliderDirectionX *= -1;
+						break;
+					}
+				}
+			}
+		}
+
+		if (getElementAt(collider.getX(), collider.getY() + COLLIDER_RADIUS) != null
+				|| getElementAt(collider.getX() + COLLIDER_RADIUS * 2,
+						collider.getY() + COLLIDER_RADIUS) != null) {
+			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
+				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
+					if (collider.equals(blocks[i][f])) {
+						remove(blocks[i][f]);// EXTERMINATE!
+						numberOfBlocks--;//
+						colliderDirectionY *= -1;// разворачивает Шар
+						break;
+					}
+				}
+			}
+
+		}
 	}
 
 	private void checkForWallCollision() {
-		if (collider.getY() <  0) {
-//			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
-//				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
-//					if (collider.equals(blocks[i][f])) {
-//						remove(blocks[i][f]);// EXTERMINATE!
-//						numberOfBlocks--;//
-//						colliderDirectionY *= -1;// разворачивает Шар
-//						break;
-//					}
-//				}
-//			}
+		if (collider.getY() < 0) {
 			colliderDirectionY *= -1;
 
 		}
