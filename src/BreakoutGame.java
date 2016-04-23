@@ -3,7 +3,6 @@ import java.awt.event.*;
 import acm.graphics.*;
 import acm.program.*;
 import acm.util.*;
-import acm.program.*;
 
 public class BreakoutGame extends GraphicsProgram {
 	private static final int SPACE_BETWEEN_BLOCKS = 4;
@@ -34,6 +33,7 @@ public class BreakoutGame extends GraphicsProgram {
 	int numberOfBlocks = 0;
 
 	GLabel info = new GLabel("чтобы начать игру, нажмите пробел");
+	GLabel info2 = new GLabel("чтобы отправить Шар нажмите левый шифт");
 
 	int colliderX = (WINDOW_WIDTH - PADDLE_WIDTH) / 2 + PADDLE_WIDTH / 2
 			- COLLIDER_RADIUS;
@@ -51,6 +51,7 @@ public class BreakoutGame extends GraphicsProgram {
 
 	boolean field = false;
 	boolean game = false;
+	boolean colliderIsOnPaddle = true;
 
 	public void run() {
 		addKeyListeners();
@@ -64,17 +65,18 @@ public class BreakoutGame extends GraphicsProgram {
 		setBlocks();
 		createCollider();
 		createPaddle();
-		System.out.println(numberOfBlocks);
+		System.out.println("Осталось " + numberOfBlocks + " блоков");
 
 	}
 
 	private void addInstruction() {
 		add(info, (WINDOW_WIDTH - info.getDescent()) / 4,
 				(WINDOW_HIGHT - info.getAscent()) / 2);
+		add(info2, (WINDOW_WIDTH - info2.getDescent()) / 4,
+				(WINDOW_HIGHT - info2.getAscent()) / 2 + info.getAscent());
 	}
 
 	private void setBlocks() {
-		// TODO переписать на более простой вариант
 		for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
 			for (int f = 0; f < NUMBER_OF_RAWS / 5; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
@@ -131,107 +133,124 @@ public class BreakoutGame extends GraphicsProgram {
 		}
 	}
 
-	private void createPaddle() {//создает доску
+	private void createPaddle() {// создает доску
 		paddle.setFilled(true);
 		paddle.setFillColor(Color.BLACK);
 		add(paddle);
 	}
 
-	private void createCollider() {//создает шар
+	private void createCollider() {// создает шар
 		collider.setFilled(true);
 		collider.setFillColor(Color.BLACK);
 		add(collider, colliderX, colliderY);
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {//слушатель нажатия клавиш(бессмыслено)
+	public void keyTyped(KeyEvent e) {// слушатель нажатия клавиш(бессмыслено)
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		System.out.println(e.getKeyCode());//проверяет, какая клавиша нажата(для удобства работы с кодом)
-		if (e.getKeyCode() == 32 && !field) {//проверяет нажатие пробела
-			createField();//создает поле
+		System.out.println("нажата клавиша номер " + e.getKeyCode());// проверяет,
+																		// какая
+																		// клавиша
+																		// нажата(для
+																		// удобства
+																		// работы
+																		// с
+																		// кодом)
+		if (e.getKeyCode() == 32 && !field) {// проверяет нажатие пробела
+			createField();// создает поле
 			field = true;
+		}
+		if (e.getKeyCode() == 16 && field) {// проверяет нажатие пробела
 			game = true;
-			startGame();//начинает саму игру
+			colliderIsOnPaddle = false;
+			remove(info2);
+			startGame();
 		}
 
 	}
 
-	private void startGame() {//начинает игру
+	@Override
+	public void keyPressed(KeyEvent e) {// управление платформой
+		if (field && e.getKeyCode() == 37 && paddle.getX() > 0) {
+			paddle.move(-SPEED, 0);
+			if (colliderIsOnPaddle == true)
+				collider.move(-SPEED, 0);
+			pause(SPEED);
+		}
+		if (field && e.getKeyCode() == 39
+				&& paddle.getX() + PADDLE_WIDTH < WINDOW_WIDTH) {
+			if (colliderIsOnPaddle == true)
+				collider.move(SPEED, 0);
+			paddle.move(SPEED, 0);
+
+		}
+
+	}
+
+	private void startGame() {// начинает игру
 		while (game) {
-			moveCollider();//запускает Шар
-			checkForCollision();//проверяет удар
-			checkForBlocksLeft();//проверяет, очтались ли блоки
+			moveCollider();// запускает Шар
+			checkForCollision();// проверяет удар
+			checkForBlocksLeft();// проверяет, очтались ли блоки
 		}
 	}
 
 	private void checkForBlocksLeft() {// проверяет на наличие блоков
 		if (numberOfBlocks < 1)
-		game = false;//завершает игру
+			game = false;// завершает игру
 
 	}
 
 	private void checkForCollision() {
-		checkForCollisionX();//проверяет столкновение по X
-		checkForCollisionY();//проверяет столкновение по Y
+		checkForWallCollision();// проверяет столкновение со стенкой по
+		checkForBlockCollision();
+		//TODO checkForGameEnd();//проверить столкновение с нижней стенкой(смерть)
 
 	}
 
-	private void checkForCollisionY() {
-		if (collider.getY() < 0) {
-			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
-				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
-					if (collider.equals(blocks[i][f])) {
-						remove(blocks[i][f]);//EXTERMINATE!
-						numberOfBlocks--;//
-						colliderDirectionY *= -1;//разворачивает Шар
-						break;
-					}
-				}
-			}
+	/*TODO*/private void checkForBlockCollision() {
+//		if(collider.getX());
+//			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
+//				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
+//					if (collider.equals(blocks[i][f])) {
+//						remove(blocks[i][f]);//EXTERMINATE!!
+//						numberOfBlocks--;
+//						colliderDirectionX *= -1;
+//						break;
+//					}
+//				}
+//			}
+		
+	}
+
+	private void checkForWallCollision() {
+		if (collider.getY() <  0) {
+//			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
+//				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
+//					if (collider.equals(blocks[i][f])) {
+//						remove(blocks[i][f]);// EXTERMINATE!
+//						numberOfBlocks--;//
+//						colliderDirectionY *= -1;// разворачивает Шар
+//						break;
+//					}
+//				}
+//			}
 			colliderDirectionY *= -1;
 
 		}
-
-	}
-
-	private void checkForCollisionX() {//смотреть checkForCollisionY
 		if (collider.getX() < 0
 				|| collider.getX() + COLLIDER_RADIUS * 2 > WINDOW_WIDTH) {
-			for (int i = 0; i < NUMBER_OF_COLOMNES; i++) {
-				for (int f = 0; f < NUMBER_OF_RAWS; f++) {
-					if (collider.equals(blocks[i][f])) {
-						remove(blocks[i][f]);
-						numberOfBlocks--;
-						colliderDirectionX *= -1;
-						break;
-					}
-				}
-			}
 			colliderDirectionX *= -1;
 		}
 	}
 
-	private void moveCollider() {//сила, движущая Шар
+	private void moveCollider() {// сила, движущая Шар
 		collider.move(-colliderDirectionX, -colliderDirectionY);
 		pause(SPEED);
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {//управление платформой
-		if (game && e.getKeyCode() == 37 && paddle.getX() > 0) {
-			paddle.move(-SPEED, 0);
-			pause(SPEED);
-		}
-		if (game && e.getKeyCode() == 39
-				&& paddle.getX() + PADDLE_WIDTH < WINDOW_WIDTH) {
-			paddle.move(SPEED, 0);
-
-		}
 
 	}
 
