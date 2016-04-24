@@ -43,8 +43,8 @@ public class BreakoutGame extends GraphicsProgram {
 
 	RandomGenerator rgen = RandomGenerator.getInstance();
 	int randomNumberForCollderDirection = rgen.nextInt(25, 70);
-	int colliderDirectionY = (45);
-	int colliderDirectionX = (45);
+	int colliderDirectionY = (SPEED);
+	int colliderDirectionX = (SPEED);
 
 	int paddleX = (WINDOW_WIDTH - PADDLE_WIDTH) / 2;
 	int paddleY = WINDOW_HIGHT - PADDLE_BOTTOM_OFFSET;
@@ -68,7 +68,7 @@ public class BreakoutGame extends GraphicsProgram {
 		setBlocks();
 		createCollider();
 		createPaddle();
-		System.out.println("Осталось " + numberOfBlocks + " блоков");
+		System.out.println("выставлено " + numberOfBlocks + " блоков");
 
 	}
 
@@ -89,7 +89,7 @@ public class BreakoutGame extends GraphicsProgram {
 				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for (int f = 0; f < NUMBER_OF_RAWS / 5; f++) {
+			for (int f = 0; f < 2; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.ORANGE);
 				block.setFilled(true);
@@ -99,7 +99,7 @@ public class BreakoutGame extends GraphicsProgram {
 				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for (int f = 0; f < NUMBER_OF_RAWS / 5; f++) {
+			for (int f = 0; f < 2; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.YELLOW);
 				block.setFilled(true);
@@ -109,7 +109,7 @@ public class BreakoutGame extends GraphicsProgram {
 				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for (int f = 0; f < NUMBER_OF_RAWS / 5; f++) {
+			for (int f = 0; f < 2; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.GREEN);
 				block.setFilled(true);
@@ -119,7 +119,7 @@ public class BreakoutGame extends GraphicsProgram {
 				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
-			for (int f = 0; f < NUMBER_OF_RAWS / 5; f++) {
+			for (int f = 0; f < 2; f++) {
 				GRect block = new GRect(BLOCK_WIDTH, BLOCK_HIGHT);
 				block.setColor(Color.CYAN);
 				block.setFilled(true);
@@ -197,17 +197,10 @@ public class BreakoutGame extends GraphicsProgram {
 
 	private void startGame() {// начинает игру
 		int i = 0;
-		
 		while (game) {
-			collider.move(-10, -20);
-			pause(400);
-			i++;
-			System.out.println(i);
-			if (i > 0)
-				game = false;
-			// запускает Шар
-			 checkForCollision();// проверяет удар
-			 checkForBlocksLeft();// проверяет, остались ли блоки
+			moveCollider(i);// запускает Шар
+			checkForCollision();// проверяет удар
+			checkForBlocksLeft();// проверяет, остались ли блоки
 		}
 	}
 
@@ -266,17 +259,22 @@ public class BreakoutGame extends GraphicsProgram {
 
 	private void checkForWallCollision() {
 		if (collider.getY() < 0) {
-			colliderDirectionY *= -1;
+			colliderDirectionY = -colliderDirectionY;
 
 		}
 		if (collider.getX() < 0
 				|| collider.getX() + COLLIDER_RADIUS * 2 > WINDOW_WIDTH) {
-			colliderDirectionX *= -1;
+			colliderDirectionX = -colliderDirectionX;
 		}
 	}
 
-	private void moveCollider() {// сила, движущая Шар
-		
+	private void moveCollider(int i) {// сила, движущая Шар
+		collider.move(-colliderDirectionX, -colliderDirectionY);
+		pause(400);
+		i++;
+		System.out.println(i);
+		if (i > 0)
+			game = false;
 
 	}
 
