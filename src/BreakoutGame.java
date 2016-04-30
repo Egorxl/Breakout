@@ -18,15 +18,13 @@ public class BreakoutGame extends GraphicsProgram {
 	private static final int NUMBER_OF_RAWS = 10;
 	private static final int BLOCKS_TOP_OFFSET = 70;
 
-	GRect blocks[][] = new GRect[NUMBER_OF_COLOMNES][NUMBER_OF_RAWS];
-
 	private static final int PADDLE_WIDTH = 60;
 	private static final int PADDLE_HIGHT = 10;
 	private static final int PADDLE_BOTTOM_OFFSET = 30;
 
 	private static final int COLLIDER_RADIUS = 10;
 
-	private static final int SPEED = 3;
+	private static final int SPEED = 2;
 
 	private int blockX = 0;
 	private int blockY = BLOCKS_TOP_OFFSET;
@@ -88,7 +86,6 @@ public class BreakoutGame extends GraphicsProgram {
 				block.setFillColor(Color.RED);
 				add(block, blockX, blockY);
 				numberOfBlocks++;
-				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
 			for (int f = 0; f < 2; f++) {
@@ -98,7 +95,6 @@ public class BreakoutGame extends GraphicsProgram {
 				block.setFillColor(Color.ORANGE);
 				add(block, blockX, blockY);
 				numberOfBlocks++;
-				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
 			for (int f = 0; f < 2; f++) {
@@ -108,7 +104,6 @@ public class BreakoutGame extends GraphicsProgram {
 				block.setFillColor(Color.YELLOW);
 				add(block, blockX, blockY);
 				numberOfBlocks++;
-				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
 			for (int f = 0; f < 2; f++) {
@@ -118,7 +113,6 @@ public class BreakoutGame extends GraphicsProgram {
 				block.setFillColor(Color.GREEN);
 				add(block, blockX, blockY);
 				numberOfBlocks++;
-				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
 			for (int f = 0; f < 2; f++) {
@@ -128,7 +122,6 @@ public class BreakoutGame extends GraphicsProgram {
 				block.setFillColor(Color.CYAN);
 				add(block, blockX, blockY);
 				numberOfBlocks++;
-				blocks[i][f] = block;
 				blockY += BLOCK_HIGHT + SPACE_BETWEEN_BLOCKS;
 			}
 			blockY = BLOCKS_TOP_OFFSET;
@@ -182,16 +175,17 @@ public class BreakoutGame extends GraphicsProgram {
 	@Override
 	public void keyPressed(KeyEvent e) {// управление платформой
 		if (field && e.getKeyCode() == 37 && paddle.getX() > 0) {
-			paddle.move(-SPEED, 0);
+			paddle.move(-4, 0);
 			if (colliderIsOnPaddle == true)
-				collider.move(-9, 0);
-			pause(SPEED);
+				collider.move(-4, 0);
+			pause(1);
 		}
 		if (field && e.getKeyCode() == 39
 				&& paddle.getX() + PADDLE_WIDTH < WINDOW_WIDTH) {
 			if (colliderIsOnPaddle == true)
-				collider.move(SPEED, 0);
-			paddle.move(9, 0);
+				collider.move(4, 0);
+			paddle.move(4, 0);
+			pause(1);
 
 		}
 
@@ -227,27 +221,21 @@ public class BreakoutGame extends GraphicsProgram {
 	}
 
 	private void checkForBlockCollision() {
-		if (getElementAt(collider.getX() + COLLIDER_RADIUS, collider.getY()) != null//провер€ет верхнюю 
-				&& getElementAt(collider.getX() + COLLIDER_RADIUS,					//крайнюю точку
-						collider.getY()) != collider) {								
-			remove(getElementAt(collider.getX() + COLLIDER_RADIUS,
-					collider.getY()));
-			colliderDirectionY *= -1;
-			numberOfBlocks--;
-			System.out.println("осталось " + numberOfBlocks + " блоков");
-		} else if (getElementAt(collider.getX() + COLLIDER_RADIUS,
-				collider.getY() + COLLIDER_RADIUS * 2) != null  //нижн€€
+		if (getElementAt(collider.getX() + COLLIDER_RADIUS,
+				collider.getY() - 0.1) != null
 				&& getElementAt(collider.getX() + COLLIDER_RADIUS,
-						collider.getY() + COLLIDER_RADIUS * 2) != collider
-				&& getElementAt(collider.getX() + COLLIDER_RADIUS,
-						collider.getY() + COLLIDER_RADIUS * 2) != paddle) {
-			remove(getElementAt(collider.getX() + COLLIDER_RADIUS,
-					collider.getY() + COLLIDER_RADIUS * 2));
+						collider.getY()) != collider) {// провер€ет верхнюю
+														// крайнюю точку
+			if (getElementAt(collider.getX() + COLLIDER_RADIUS, collider.getY()) != paddle) {
+				GObject i = getElementAt(collider.getX() + COLLIDER_RADIUS,
+						collider.getY() - 0.1);
+				remove(i);
+				numberOfBlocks--;
+				System.out.println("осталось " + numberOfBlocks + " блоков");
+			}
 			colliderDirectionY *= -1;
-			numberOfBlocks--;
-			System.out.println("осталось " + numberOfBlocks + " блоков");
 		}
-		
+
 	}
 
 	private void checkForWallCollision() {
