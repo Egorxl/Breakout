@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.datatransfer.SystemFlavorMap;
 import java.awt.event.*;
 import acm.graphics.*;
 import acm.program.*;
@@ -39,8 +38,11 @@ public class BreakoutGame extends GraphicsProgram {
 	int colliderY = WINDOW_HIGHT - PADDLE_BOTTOM_OFFSET - COLLIDER_RADIUS * 2;
 	GOval collider = new GOval(COLLIDER_RADIUS * 2, COLLIDER_RADIUS * 2);
 
-	int colliderDirectionY = (SPEED);
-	int colliderDirectionX = (SPEED);
+	RandomGenerator rgenNumber = new RandomGenerator();
+	int rgen = rgenNumber.nextInt(1, 3);
+	int rGen = rgenNumber.nextInt(2, 3);
+	int colliderDirectionY = rGen;
+	int colliderDirectionX = rgen;
 
 	int paddleX = (WINDOW_WIDTH - PADDLE_WIDTH) / 2;
 	int paddleY = WINDOW_HIGHT - PADDLE_BOTTOM_OFFSET;
@@ -175,16 +177,16 @@ public class BreakoutGame extends GraphicsProgram {
 	@Override
 	public void keyPressed(KeyEvent e) {// управление платформой
 		if (field && e.getKeyCode() == 37 && paddle.getX() > 0) {
-			paddle.move(-4, 0);
+			paddle.move(-5, 0);
 			if (colliderIsOnPaddle == true)
-				collider.move(-4, 0);
+				collider.move(-5, 0);
 			pause(1);
 		}
 		if (field && e.getKeyCode() == 39
 				&& paddle.getX() + PADDLE_WIDTH < WINDOW_WIDTH) {
 			if (colliderIsOnPaddle == true)
-				collider.move(4, 0);
-			paddle.move(4, 0);
+				collider.move(5, 0);
+			paddle.move(5, 0);
 			pause(1);
 
 		}
