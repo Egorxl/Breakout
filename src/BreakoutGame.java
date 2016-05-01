@@ -192,9 +192,8 @@ public class BreakoutGame extends GraphicsProgram {
 	}
 
 	private void startGame() {// начинает игру
-		int i = 0;
 		while (game) {
-			moveCollider(i);// запускает Шар
+			moveCollider();// запускает Шар
 			checkForCollision();// проверяет удар
 			checkForBlocksLeft();// проверяет, остались ли блоки
 		}
@@ -224,18 +223,45 @@ public class BreakoutGame extends GraphicsProgram {
 		if (getElementAt(collider.getX() + COLLIDER_RADIUS,
 				collider.getY() - 0.1) != null
 				&& getElementAt(collider.getX() + COLLIDER_RADIUS,
-						collider.getY()) != collider) {// проверяет верхнюю
-														// крайнюю точку
-			if (getElementAt(collider.getX() + COLLIDER_RADIUS, collider.getY()) != paddle) {
-				GObject i = getElementAt(collider.getX() + COLLIDER_RADIUS,
-						collider.getY() - 0.1);
-				remove(i);
+						collider.getY() - 0.1) != paddle) { // проверяет верхнюю
+															// крайнюю точку
+			remove(getElementAt(collider.getX() + COLLIDER_RADIUS,
+					collider.getY() - 0.1));
+			colliderDirectionY *= -1;
+			numberOfBlocks--;
+			System.out.println("осталось " + numberOfBlocks + " блоков");
+		} else if (getElementAt(collider.getX() + COLLIDER_RADIUS,
+				collider.getY() + COLLIDER_RADIUS * 2 + 0.1) != null) {// низ
+			if (getElementAt(collider.getX() + COLLIDER_RADIUS, collider.getY()
+					+ COLLIDER_RADIUS * 2 + 0.01) != paddle) {
+				remove(getElementAt(collider.getX() + COLLIDER_RADIUS,
+						collider.getY() + COLLIDER_RADIUS * 2 + 0.1));
 				numberOfBlocks--;
 				System.out.println("осталось " + numberOfBlocks + " блоков");
 			}
 			colliderDirectionY *= -1;
+		} else if (getElementAt(collider.getX() - 0.1, collider.getY()
+				+ COLLIDER_RADIUS) != null) { // лево
+			if (getElementAt(collider.getX() - 0.1, collider.getY()
+					+ COLLIDER_RADIUS) != paddle) {
+				remove(getElementAt(collider.getX() - 0.1, collider.getY()
+						+ COLLIDER_RADIUS));
+				numberOfBlocks--;
+				System.out.println("осталось " + numberOfBlocks + " блоков");
+			}
+			colliderDirectionX *= -1;
+		} else if (getElementAt(collider.getX() + COLLIDER_RADIUS * 2 + 0.1,
+				collider.getY() + COLLIDER_RADIUS) != null) { // право
+			if (getElementAt(collider.getX() + COLLIDER_RADIUS * 2 + 0.1,
+					collider.getY() + COLLIDER_RADIUS) != paddle) {
+				remove(getElementAt(
+						collider.getX() + COLLIDER_RADIUS * 2 + 0.1,
+						collider.getY() + COLLIDER_RADIUS));
+				numberOfBlocks--;
+				System.out.println("осталось " + numberOfBlocks + " блоков");
+			}
+			colliderDirectionX *= -1;
 		}
-
 	}
 
 	private void checkForWallCollision() {
@@ -249,9 +275,9 @@ public class BreakoutGame extends GraphicsProgram {
 		}
 	}
 
-	private void moveCollider(int i) {// сила, движущая Шар
+	private void moveCollider() {// сила, движущая Шар
 		collider.move(-colliderDirectionX, -colliderDirectionY);
-		pause(8);
+		pause(9);
 	}
 
 }
